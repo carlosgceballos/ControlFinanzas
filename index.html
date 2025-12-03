@@ -1,11 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Finanzas - Gestión Personal</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  
+    <!-- Header con navegación -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1> Mis Finanzas</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul class="nav-list">
+                        <li><a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a></li>
+                        <li><a href="#transacciones" class="nav-link" data-section="transacciones">Transacciones</a></li>
+                        <li><a href="#categorias" class="nav-link" data-section="categorias">Categorías</a></li>
+                        <li><a href="#presupuestos" class="nav-link" data-section="presupuestos">Presupuestos</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Sección Dashboard -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h2>Dashboard</h2>
+                    <div class="filter-controls">
+                        <select id="month-filter" class="form-select">
+                            <option value="">Seleccionar mes</option>
+                        </select>
+                        <select id="year-filter" class="form-select">
+                            <option value="">Seleccionar año</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tarjetas de resumen -->
+                <div class="summary-cards">
+                    <div class="card summary-card">
+                        <div class="card-icon income"></div>
+                        <div class="card-content">
+                            <p class="card-label">Ingresos</p>
+                            <h3 class="card-value" id="total-ingresos">$0.00</h3>
+                        </div>
+                    </div>
+                    <div class="card summary-card">
+                        <div class="card-icon expense"></div>
+                        <div class="card-content">
+                            <p class="card-label">Egresos</p>
+                            <h3 class="card-value" id="total-egresos">$0.00</h3>
+                        </div>
+                    </div>
+                    <div class="card summary-card">
+                        <div class="card-icon balance"></div>
+                        <div class="card-content">
+                            <p class="card-label">Balance</p>
+                            <h3 class="card-value" id="balance-total">$0.00</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos -->
+                <div class="charts-grid">
+                    <div class="card chart-card">
+                        <h3>Gastos por Categoría</h3>
+                        <canvas id="chart-gastos-categoria"></canvas>
+                    </div>
+                    <div class="card chart-card">
+                        <h3>Balance Real vs Estimado</h3>
+                        <canvas id="chart-balance-lineas"></canvas>
+                    </div>
+                    <div class="card chart-card">
+                        <h3>Egresos Estimados vs Reales</h3>
+                        <canvas id="chart-egresos-comparativo"></canvas>
+                    </div>
+                    <div class="card chart-card">
+                        <h3>Evolución del Balance</h3>
+                        <canvas id="chart-evolucion-balance"></canvas>
+                    </div>
+                </div>
+
+                <!-- Transacciones recientes -->
+                <div class="card recent-transactions">
+                    <h3>Transacciones Recientes</h3>
+                    <div id="recent-transactions-list"></div>
+                </div>
+            </section>
+
+            <!-- Sección Transacciones -->
+            <section id="transacciones" class="content-section">
+                <div class="section-header">
+                    <h2>Transacciones</h2>
+                    <button class="btn btn-primary" id="btn-nueva-transaccion">
+                         Nueva Transacción
+                    </button>
+                </div>
+
+                <!-- Filtros de transacciones -->
+                <div class="card filters-card">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label for="filter-tipo">Tipo</label>
+                            <select id="filter-tipo" class="form-select">
+                                <option value="">Todos</option>
+                                <option value="ingreso">Ingresos</option>
+                                <option value="egreso">Egresos</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filter-categoria">Categoría</label>
+                            <select id="filter-categoria" class="form-select">
+                                <option value="">Todas</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filter-busqueda">Buscar</label>
+                            <input type="text" id="filter-busqueda" class="form-input" placeholder="Descripción o categoría...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de transacciones -->
+                <div class="card">
+                    <div class="table-container">
+                        <table class="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Categoría</th>
+                                    <th>Descripción</th>
+                                    <th>Monto</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-table-body">
+                                <!-- Se llenará dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
