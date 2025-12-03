@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Finanzas - Gestión Personal</title>
-    <link rel="stylesheet" href="css/styles.css">
+    ,<link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Header con navegación -->
@@ -149,8 +149,65 @@
                     </div>
                 </div>
             </section>
+            <!--seccion categorias-->
+            <section id="categorias" class="content-section">
+                <div class=" section-header">
+                    <h2>Categorias</h2>
+                    <button class="btn-primary" id="btn-nueva-categoria">
+                        Nueva Categoria 
+                    </button>
+                </div>
+                <div class="categories-grid" id="categories-grid">
+                    <!--se llenara dinamicamente-->
+                </div>
+            </section>
+
+            <!--seccion presupuestos-->
+            <section id="presupuestos" class="content-section">
+                <div class="section-header">
+                    <h2>Presupuestos</h2>
+                    <button class="btn btn-primary" id="btn-nuevo-presupuesto">
+                        Nuevo Presupuesto 
+                    </button>
+                </div>
+
+                <!--Selector de periodo-->
+                <div class="card">
+                    <div class="budget-period-selector">
+                        <label for="budget-month">Mes:</label>
+                        <select id="budget-month" class="from-select"></select>
+                        <label for="budget-year">Año:</label>
+                        <select id="budget-year" class="from-select"></select>
+
+                    </div>
+                </div>
+
+                <!--lista de presupuestos-->
+
+                <div class="card">
+                    <div id="budget-list"></div>
+                    
+                </div>
+            </section>
+
+
+            
+            
         </div>
-    </main>
+     </main>
+
+     <!--modal para formularios-->
+     <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Titulo del Modal</h3>
+                <button class="modal-close" id="modal-close">x</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                
+            </div>
+        </div>
+     </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
