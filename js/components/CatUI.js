@@ -12,10 +12,15 @@ class CategoriasUI {
 
     configurarEventos() {
         var self = this;
-        
         var btnNuevaCategoria = document.getElementById('btn-nueva-categoria');
+        
         if (btnNuevaCategoria) {
-            btnNuevaCategoria.addEventListener('click', function() {
+            // Clonar el boton para eliminar listeners previos
+            var nuevoBoton = btnNuevaCategoria.cloneNode(true);
+            btnNuevaCategoria.parentNode.replaceChild(nuevoBoton, btnNuevaCategoria);
+            
+            // Agregar el evento al nuevo boton
+            nuevoBoton.addEventListener('click', function() {
                 self.mostrarFormularioCategoria();
             });
         }
@@ -32,7 +37,7 @@ class CategoriasUI {
             categoriesGrid.innerHTML = '';
             
             if (categorias.length === 0) {
-                categoriesGrid.innerHTML = '<p>No hay categorías creadas</p>';
+                categoriesGrid.innerHTML = '<p>No hay categorias creadas</p>';
                 return;
             }
             
@@ -54,14 +59,14 @@ class CategoriasUI {
                 
                 categoriesGrid.appendChild(categoriaCard);
                 
-                // Botón editar
+                // Boton editar
                 var btnEditar = categoriaCard.querySelector('.btn-secondary');
                 btnEditar.addEventListener('click', function() {
                     var id = parseInt(this.getAttribute('data-id'));
                     self.editarCategoria(id);
                 });
                 
-                // Botón eliminar
+                // Boton eliminar
                 var btnEliminar = categoriaCard.querySelector('.btn-danger');
                 btnEliminar.addEventListener('click', function() {
                     var id = parseInt(this.getAttribute('data-id'));
@@ -70,13 +75,12 @@ class CategoriasUI {
             }
         })
         .catch(function(error) {
-            console.error('Error al mostrar categorías:', error);
+            console.error('Error al mostrar categorias:', error);
         });
     }
 
     editarCategoria(id) {
         var self = this;
-        // Obtener datos de la categoría
         this.categoriaService.obtenerCategorias()
         .then(function(categorias) {
             var categoria = null;
@@ -88,25 +92,24 @@ class CategoriasUI {
             }
             
             if (!categoria) {
-                alert('Categoría no encontrada');
+                alert('Categoria no encontrada');
                 return;
             }
             
-            // Mostrar formulario con datos actuales
             self.mostrarFormularioCategoria(categoria);
         })
         .catch(function(error) {
-            alert('Error al obtener categoría: ' + error.message);
+            alert('Error al obtener categoria: ' + error.message);
         });
     }
 
    mostrarFormularioCategoria(categoria) {
         var esEdicion = !!categoria;
-        var titulo = esEdicion ? 'Editar Categoría' : 'Nueva Categoría';
+        var titulo = esEdicion ? 'Editar Categoria' : 'Nueva Categoria';
     
         var formHTML = 
         '<div class="form-group">' +
-            '<label for="categoria-nombre">Nombre de la categoría</label>' +
+            '<label for="categoria-nombre">Nombre de la categoria</label>' +
             '<input type="text" id="categoria-nombre" class="form-input" placeholder="Ej: Entretenimiento"' +
                    (esEdicion ? ' value="' + categoria.nombre + '"' : '') + '>' +
         '</div>' +
@@ -126,34 +129,41 @@ class CategoriasUI {
     
         var self = this;
         setTimeout(function() {
-        var btnGuardar = document.getElementById('btn-guardar-categoria');
-        var btnCancelar = document.getElementById('btn-cancelar-categoria');
-        
-        if (btnGuardar) {
-            btnGuardar.addEventListener('click', function() {
-                if (esEdicion) {
-                    self.actualizarCategoria(categoria.id);
-                } else {
-                    self.guardarCategoria();
-                }
-            });
-        }
-        
+            var btnGuardar = document.getElementById('btn-guardar-categoria');
+            var btnCancelar = document.getElementById('btn-cancelar-categoria');
+            
+            if (btnGuardar) {
+                // Clonar para eliminar listeners previos
+                var nuevoGuardar = btnGuardar.cloneNode(true);
+                btnGuardar.parentNode.replaceChild(nuevoGuardar, btnGuardar);
+                
+                nuevoGuardar.addEventListener('click', function() {
+                    if (esEdicion) {
+                        self.actualizarCategoria(categoria.id);
+                    } else {
+                        self.guardarCategoria();
+                    }
+                });
+            }
+            
             if (btnCancelar) {
-                    btnCancelar.addEventListener('click', function() {
+                // Clonar para eliminar listeners previos
+                var nuevoCancelar = btnCancelar.cloneNode(true);
+                btnCancelar.parentNode.replaceChild(nuevoCancelar, btnCancelar);
+                
+                nuevoCancelar.addEventListener('click', function() {
                     self.modal.cerrar();
                 });
             }
         }, 100);
     }
-    
 
     guardarCategoria() {
         var nombreInput = document.getElementById('categoria-nombre');
         var colorInput = document.getElementById('categoria-color');
         
         if (!nombreInput || !nombreInput.value.trim()) {
-            alert('El nombre de la categoría es obligatorio');
+            alert('El nombre de la categoria es obligatorio');
             return;
         }
         
@@ -163,39 +173,39 @@ class CategoriasUI {
         var self = this;
         this.categoriaService.crearCategoria(nombre, color)
             .then(function(categoria) {
-                console.log('Categoría creada:', categoria);
+                console.log('Categoria creada:', categoria);
                 self.modal.cerrar();
                 self.mostrarCategorias();
-                alert('Categoría creada correctamente');
+                alert('Categoria creada correctamente');
             })
             .catch(function(error) {
                 alert('Error: ' + error.message);
             });
     }
 
-        eliminarCategoria(id) {
-            if (!confirm('¿Estás seguro de eliminar esta categoría? Se eliminarán también todas las transacciones asociadas.')) {
+    eliminarCategoria(id) {
+        if (!confirm('¿Estas seguro de eliminar esta categoria? Se eliminaran tambien todas las transacciones asociadas.')) {
             return;
         }
         
         var self = this;
         this.categoriaService.eliminarCategoria(id)
             .then(function() {
-                console.log('Categoría eliminada:', id);
+                console.log('Categoria eliminada:', id);
                 self.mostrarCategorias();
-                alert('Categoría eliminada correctamente');
+                alert('Categoria eliminada correctamente');
             })
             .catch(function(error) {
-                alert('Error al eliminar categoría: ' + error.message);
+                alert('Error al eliminar categoria: ' + error.message);
             });
-        }
+    }
 
-        actualizarCategoria(id) {
+    actualizarCategoria(id) {
         var nombreInput = document.getElementById('categoria-nombre');
         var colorInput = document.getElementById('categoria-color');
     
         if (!nombreInput || !nombreInput.value.trim()) {
-            alert('El nombre de la categoría es obligatorio');
+            alert('El nombre de la categoria es obligatorio');
             return;
         }
     
@@ -206,14 +216,13 @@ class CategoriasUI {
     
         var self = this;
         this.categoriaService.actualizarCategoria(id, datos).then(function() {
-            console.log('Categoría actualizada:', id);
+            console.log('Categoria actualizada:', id);
             self.modal.cerrar();
             self.mostrarCategorias();
-            alert('Categoría actualizada correctamente');
+            alert('Categoria actualizada correctamente');
         })
         .catch(function(error) {
             alert('Error: ' + error.message);
         });
     }
-
 }
