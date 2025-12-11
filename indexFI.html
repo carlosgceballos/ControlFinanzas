@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Finanzas - Gestión Personal</title>
-    ,<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styleFI.css">
 </head>
 <body>
-    <!-- Header con navegación -->
+    <!-- Header con navegacion -->
     <header class="main-header">
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <h1> Mis Finanzas</h1>
+                    <h1>💰 Mis Finanzas</h1>
                 </div>
                 <nav class="main-nav">
                     <ul class="nav-list">
@@ -29,7 +29,7 @@
     <!-- Contenedor principal -->
     <main class="main-content">
         <div class="container">
-            <!-- Sección Dashboard -->
+            <!-- Seccion Dashboard -->
             <section id="dashboard" class="content-section active">
                 <div class="section-header">
                     <h2>Dashboard</h2>
@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                <!-- Gráficos -->
+                <!-- Graficos -->
                 <div class="charts-grid">
                     <div class="card chart-card">
                         <h3>Gastos por Categoría</h3>
@@ -95,12 +95,12 @@
                 </div>
             </section>
 
-            <!-- Sección Transacciones -->
+            <!-- Seccion Transacciones -->
             <section id="transacciones" class="content-section">
                 <div class="section-header">
                     <h2>Transacciones</h2>
                     <button class="btn btn-primary" id="btn-nueva-transaccion">
-                         Nueva Transacción
+                        ➕ Nueva Transacción
                     </button>
                 </div>
 
@@ -143,75 +143,90 @@
                                 </tr>
                             </thead>
                             <tbody id="transactions-table-body">
-                                <!-- Se llenará dinámicamente -->
+                                <!-- Se llenara dinamicamente -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
-            <!--seccion categorias-->
+
+            <!-- Seccion Categorias -->
             <section id="categorias" class="content-section">
-                <div class=" section-header">
-                    <h2>Categorias</h2>
-                    <button class="btn-primary" id="btn-nueva-categoria">
-                        Nueva Categoria 
+                <div class="section-header">
+                    <h2>Categorías</h2>
+                    <button class="btn btn-primary" id="btn-nueva-categoria">
+                        ➕ Nueva Categoría 
                     </button>
                 </div>
                 <div class="categories-grid" id="categories-grid">
-                    <!--se llenara dinamicamente-->
+                    <!-- Se llenara dinamicamente -->
                 </div>
             </section>
 
-            <!--seccion presupuestos-->
+            <!-- Seccion Presupuestos -->
             <section id="presupuestos" class="content-section">
                 <div class="section-header">
                     <h2>Presupuestos</h2>
                     <button class="btn btn-primary" id="btn-nuevo-presupuesto">
-                        Nuevo Presupuesto 
+                        ➕ Nuevo Presupuesto 
                     </button>
                 </div>
-
-                <!--Selector de periodo-->
+                
+                <!-- Selector de periodo -->
                 <div class="card">
                     <div class="budget-period-selector">
-                        <label for="budget-month">Mes:</label>
-                        <select id="budget-month" class="from-select"></select>
-                        <label for="budget-year">Año:</label>
-                        <select id="budget-year" class="from-select"></select>
-
+                        <div class="filter-group">
+                            <label for="budget-type">Mostrar:</label>
+                            <select id="budget-type" class="form-select">
+                                <option value="mensual">Presupuestos Mensuales</option>
+                                <option value="anual">Presupuestos Anuales</option>
+                                <option value="">Todos los Presupuestos</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="budget-month">Mes:</label>
+                            <select id="budget-month" class="form-select"></select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="budget-year">Año:</label>
+                            <select id="budget-year" class="form-select"></select>
+                        </div>
                     </div>
                 </div>
-
-                <!--lista de presupuestos-->
-
+                
+                <!-- Lista de presupuestos -->
                 <div class="card">
                     <div id="budget-list"></div>
-                    
                 </div>
-            </section>
-
-
-            
-            
+            </section>     
         </div>
-     </main>
+    </main>
 
-     <!--modal para formularios-->
-     <div id="modal-overlay" class="modal-overlay">
+    <!-- Modal para formularios -->
+    <div id="modal-overlay" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
-                <h3 id="modal-title">Titulo del Modal</h3>
-                <button class="modal-close" id="modal-close">x</button>
+                <h3 id="modal-title">Título del Modal</h3>
+                <button class="modal-close" id="modal-close">×</button>
             </div>
             <div class="modal-body" id="modal-body">
-                
+                <!-- Contenido dinamico -->
             </div>
         </div>
-     </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/db/FinanzasDB.js"></script>
     <script src="js/utils/Modal.js"></script>
+    <script src="js/services/CatServ.js"></script>
+    <script src="js/services/TransacSer.js"></script>
+    <script src="js/services/PresuServ.js"></script>
+    <script src="js/components/CatUI.js"></script>
+    <script src="js/components/TransacUI.js"></script>
+    <script src="js/components/PresupuestoUI.js"></script>
+    <script src="js/components/DashUI.js"></script>
+    <script src="js/charts/ChartManager.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
