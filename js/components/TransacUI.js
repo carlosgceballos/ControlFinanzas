@@ -16,7 +16,7 @@ class TransaccionesUI {
   configurarEventos() {
     var self = this;
 
-    // Botón nueva transacción
+    // Boton nueva transaccion
     var btnNueva = document.getElementById('btn-nueva-transaccion');
     if (btnNueva) {
       btnNueva.addEventListener('click', function () {
@@ -70,52 +70,53 @@ class TransaccionesUI {
     var tbody = document.getElementById('transactions-table-body');
     if (!tbody) return;
 
+    // Limpiar tabla inmediatamente
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando...</td></tr>';
+
     this.transaccionService.obtenerTransacciones()
       .then(function (transacciones) {
-        // Aplicar filtros
-        var filtroTipo = document.getElementById('filter-tipo').value;
-        var filtroCategoria = document.getElementById('filter-categoria').value;
-        var filtroBusqueda = document.getElementById('filter-busqueda').value.toLowerCase();
-
-        var transaccionesFiltradas = transacciones.filter(function (t) {
-
-          if (filtroTipo && t.tipo !== filtroTipo) {
-            return false;
-          }
-
-          if (filtroCategoria && t.categoria != filtroCategoria) {
-            return false;
-          }
-
-
-          if (filtroBusqueda) {
-            var descripcion = t.descripcion ? t.descripcion.toLowerCase() : '';
-            var categoriaNombre = t.categoriaNombre ? t.categoriaNombre.toLowerCase() : '';
-            return descripcion.includes(filtroBusqueda) || categoriaNombre.includes(filtroBusqueda);
-          }
-
-          return true;
-        });
-
-        // Ordenar por fecha (más reciente primero)
-        transaccionesFiltradas.sort(function (a, b) {
-          return new Date(b.fecha) - new Date(a.fecha);
-        });
-
-        // Mostrar en tabla
-        tbody.innerHTML = '';
-
-        if (transaccionesFiltradas.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No hay transacciones</td></tr>';
-          return;
-        }
-
-        // Primero obtener nombres de categorías
-        self.categoriaService.obtenerCategorias().then(function (categorias) {
+        // Primero obtener categorias
+        return self.categoriaService.obtenerCategorias().then(function (categorias) {
           var categoriasMap = {};
           categorias.forEach(function (cat) {
             categoriasMap[cat.id] = cat.nombre;
           });
+
+          // Aplicar filtros
+          var filtroTipo = document.getElementById('filter-tipo').value;
+          var filtroCategoria = document.getElementById('filter-categoria').value;
+          var filtroBusqueda = document.getElementById('filter-busqueda').value.toLowerCase();
+
+          var transaccionesFiltradas = transacciones.filter(function (t) {
+            if (filtroTipo && t.tipo !== filtroTipo) {
+              return false;
+            }
+
+            if (filtroCategoria && t.categoria != filtroCategoria) {
+              return false;
+            }
+
+            if (filtroBusqueda) {
+              var descripcion = t.descripcion ? t.descripcion.toLowerCase() : '';
+              var nombreCategoria = categoriasMap[t.categoria] ? categoriasMap[t.categoria].toLowerCase() : '';
+              return descripcion.includes(filtroBusqueda) || nombreCategoria.includes(filtroBusqueda);
+            }
+
+            return true;
+          });
+
+          // Ordenar por fecha (mas reciente primero)
+          transaccionesFiltradas.sort(function (a, b) {
+            return new Date(b.fecha) - new Date(a.fecha);
+          });
+
+          // Limpiar tabla antes de agregar filas
+          tbody.innerHTML = '';
+
+          if (transaccionesFiltradas.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No hay transacciones</td></tr>';
+            return;
+          }
 
           // Crear filas de tabla
           transaccionesFiltradas.forEach(function (transaccion) {
@@ -161,14 +162,18 @@ class TransaccionesUI {
             });
           });
         });
+      })
+      .catch(function(error) {
+        console.error('Error al mostrar transacciones:', error);
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Error al cargar transacciones</td></tr>';
       });
   }
 
   mostrarFormularioTransaccion(transaccionId) {
     var self = this;
-    var titulo = transaccionId ? 'Editar Transacción' : 'Nueva Transacción';
+    var titulo = transaccionId ? 'Editar Transaccion' : 'Nueva Transaccion';
 
-    // Obtener categorías para el select
+    // Obtener categorias para el select
     this.categoriaService.obtenerCategorias()
       .then(function (categorias) {
         var categoriasOptions = '';
@@ -184,10 +189,10 @@ class TransaccionesUI {
           '<input type="number" id="transaccion-monto" class="form-input" min="0.01" step="0.01" required>' +
           '</div>' + '<div class="form-group">' + '<label for="transaccion-fecha">Fecha</label>' +
           '<input type="date" id="transaccion-fecha" class="form-input" required>' +
-          '</div>' + '<div class="form-group">' + '<label for="transaccion-categoria">Categoría</label>' + '<select id="transaccion-categoria" class="form-select" required>' +
-          '<option value="">Seleccione una categoría</option>' + categoriasOptions + '</select>' + '</div>' +
+          '</div>' + '<div class="form-group">' + '<label for="transaccion-categoria">Categoria</label>' + '<select id="transaccion-categoria" class="form-select" required>' +
+          '<option value="">Seleccione una categoria</option>' + categoriasOptions + '</select>' + '</div>' +
           '<div class="form-group">' +
-          '<label for="transaccion-descripcion">Descripción (opcional)</label>' +
+          '<label for="transaccion-descripcion">Descripcion (opcional)</label>' +
           '<textarea id="transaccion-descripcion" class="form-input" rows="3"></textarea>' +
           '</div>' +'<div class="form-actions">' +'<button class="btn btn-secondary" id="btn-cancelar-transaccion">Cancelar</button>' +
           '<button class="btn btn-primary" id="btn-guardar-transaccion">Guardar</button>' +
@@ -195,11 +200,11 @@ class TransaccionesUI {
 
         self.modal.abrir(titulo, formHTML);
 
-        // Si es edición, cargar datos
+        // Si es edicion, cargar datos
         if (transaccionId) {
           self.cargarDatosTransaccion(transaccionId);
         } else {
-          // Para nueva transacción, fecha actual por defecto
+          // Para nueva transaccion, fecha actual por defecto
           document.getElementById('transaccion-fecha').valueAsDate = new Date();
         }
 
@@ -209,13 +214,21 @@ class TransaccionesUI {
           var btnCancelar = document.getElementById('btn-cancelar-transaccion');
 
           if (btnGuardar) {
-            btnGuardar.addEventListener('click', function () {
+            // Clonar el boton para eliminar listeners previos
+            var nuevoGuardar = btnGuardar.cloneNode(true);
+            btnGuardar.parentNode.replaceChild(nuevoGuardar, btnGuardar);
+            
+            nuevoGuardar.addEventListener('click', function () {
               self.guardarTransaccion(transaccionId);
             });
           }
 
           if (btnCancelar) {
-            btnCancelar.addEventListener('click', function () {
+            // Clonar el boton para eliminar listeners previos
+            var nuevoCancelar = btnCancelar.cloneNode(true);
+            btnCancelar.parentNode.replaceChild(nuevoCancelar, btnCancelar);
+            
+            nuevoCancelar.addEventListener('click', function () {
               self.modal.cerrar();
             });
           }
@@ -278,10 +291,10 @@ class TransaccionesUI {
           if (self.app.dashboardUI) {
             self.app.dashboardUI.actualizarDashboard();
           }
-          alert('Transacción actualizada correctamente');
+          alert('Transaccion actualizada correctamente');
         })
         .catch(function (error) {
-          alert('Error al actualizar transacción: ' + error.message);
+          alert('Error al actualizar transaccion: ' + error.message);
         });
     } else {
       // Crear nueva
@@ -292,10 +305,10 @@ class TransaccionesUI {
           if (self.app.dashboardUI) {
             self.app.dashboardUI.actualizarDashboard();
           }
-          alert('Transacción creada correctamente');
+          alert('Transaccion creada correctamente');
         })
         .catch(function (error) {
-          alert('Error al crear transacción: ' + error.message);
+          alert('Error al crear transaccion: ' + error.message);
         });
     }
   }
@@ -305,7 +318,7 @@ class TransaccionesUI {
   }
 
   eliminarTransaccion(id) {
-    if (!confirm('¿Estás seguro de eliminar esta transacción?')) {
+    if (!confirm('¿Estas seguro de eliminar esta transaccion?')) {
       return;
     }
 
@@ -316,10 +329,10 @@ class TransaccionesUI {
         if (self.app.dashboardUI) {
           self.app.dashboardUI.actualizarDashboard();
         }
-        alert('Transacción eliminada correctamente');
+        alert('Transaccion eliminada correctamente');
       })
       .catch(function (error) {
-        alert('Error al eliminar transacción: ' + error.message);
+        alert('Error al eliminar transaccion: ' + error.message);
       });
   }
 }
