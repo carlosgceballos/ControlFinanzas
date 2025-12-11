@@ -32,8 +32,15 @@ class CategoriasUI {
     
         if (!categoriesGrid) return;
     
-        this.categoriaService.obtenerCategorias()
-        .then(function(categorias) {
+        // Obtener categorias y transacciones
+        Promise.all([
+            this.categoriaService.obtenerCategorias(),
+            this.app.transaccionService.obtenerTransacciones()
+        ])
+        .then(function(resultados) {
+            var categorias = resultados[0];
+            var transacciones = resultados[1];
+            
             categoriesGrid.innerHTML = '';
             
             if (categorias.length === 0) {
@@ -41,8 +48,18 @@ class CategoriasUI {
                 return;
             }
             
+            // Contar transacciones por categoria
+            var conteoTransacciones = {};
+            for (var j = 0; j < transacciones.length; j++) {
+                var catId = transacciones[j].categoria;
+                conteoTransacciones[catId] = (conteoTransacciones[catId] || 0) + 1;
+            }
+            
+            // Mostrar categorias con su conteo
             for (var i = 0; i < categorias.length; i++) {
                 var categoria = categorias[i];
+                var cantidad = conteoTransacciones[categoria.id] || 0;
+                
                 var categoriaCard = document.createElement('div');
                 categoriaCard.className = 'card category-card';
                 categoriaCard.style.borderLeftColor = categoria.color;
@@ -50,7 +67,7 @@ class CategoriasUI {
                 categoriaCard.innerHTML = 
                     '<div class="category-header">' +
                         '<div class="category-name">' + categoria.nombre + '</div>' +
-                        '<div class="category-count">0 transacciones</div>' +
+                        '<div class="category-count">' + cantidad + ' transacciones</div>' +
                     '</div>' +
                     '<div class="category-actions">' +
                         '<button class="btn btn-secondary btn-small" data-id="' + categoria.id + '">Editar</button>' +
