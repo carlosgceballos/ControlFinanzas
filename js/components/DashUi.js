@@ -6,6 +6,7 @@ class DashboardUI {
     this.mesActual = new Date().getMonth() + 1;
     this.anioActual = new Date().getFullYear();
   }
+  //
 
   inicializar() {
     this.cargarFiltrosTiempo();

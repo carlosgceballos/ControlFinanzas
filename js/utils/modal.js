@@ -8,7 +8,7 @@ class ModalManager {
         
     this.configurarEventos();
   }
-
+//
   configurarEventos() {
   // Cerrar con el boton X
     this.btnClose.addEventListener('click', () => this.cerrar());
